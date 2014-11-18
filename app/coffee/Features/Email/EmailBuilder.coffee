@@ -13,13 +13,10 @@ templates.welcome =
 	compiledTemplate: _.template '''
 Hi <%= first_name %>, thanks for signing up to ShareLaTeX. If you ever get lost, you can log in again <a href="<%= siteUrl %>/login">here</a>.
 <p>
-I’m the co-founder of ShareLaTeX and I love talking to our users about our service. Please feel free to get in touch by replying to this email and I will get back to you within a day.
-
-<p>
 
 Regards, <br>
-Henry <br>
-ShareLaTeX Co-founder
+Ingolf <br>
+Maintainer of this installation
 '''
 
 templates.canceledSubscription = 
@@ -39,7 +36,7 @@ ShareLaTeX Co-founder
 '''
 
 templates.passwordResetRequested =	
-	subject:  _.template "Password Reset - ShareLatex.com"
+	subject:  _.template "Password Reset - UCL CS ShareLaTeX"
 	layout: NotificationEmailLayout
 	type:"notification"
 	compiledTemplate: _.template '''
@@ -65,7 +62,7 @@ If you didn't request a password reset, let us know.
 
 </p>
 <p>Thank you</p>
-<p> <a href="<%= siteUrl %>"> ShareLatex.com </a></p>
+<p> <a href="<%= siteUrl %>"> UCL CS ShareLaTeX </a></p>
 '''
 
 templates.projectSharedWithYou = 
@@ -87,7 +84,7 @@ templates.projectSharedWithYou =
 	</div>
 </center>
 <p> Thank you</p>
-<p> <a href="<%= siteUrl %>"> ShareLatex.com </a></p>
+<p> <a href="<%= siteUrl %>"> UCL CS ShareLaTeX </a></p>
 
 '''
 
