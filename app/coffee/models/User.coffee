@@ -15,7 +15,6 @@ UserSchema = new Schema
 	hashedPassword    : String
 	isAdmin           : {type : Boolean, default : false}
 	confirmed         : {type : Boolean, default : false}
-	verificationCode  : {type : String, default : ''}
 	signUpDate        : {type : Date, default: () -> new Date() }
 	lastLoggedIn      : {type : Date}
 	loginCount        : {type : Number, default: 0}
