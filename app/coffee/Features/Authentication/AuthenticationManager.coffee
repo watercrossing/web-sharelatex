@@ -12,7 +12,9 @@ module.exports = AuthenticationManager =
 		User.findOne query, (error, user) =>
 			return callback(error) if error?
 			if user?
-				if user.hashedPassword?
+				if not user.confirmed
+					callback "Email not verified", null
+				else if user.hashedPassword?
 					bcrypt.compare password, user.hashedPassword, (error, match) ->
 						return callback(error) if error?
 						if match
@@ -52,3 +54,12 @@ module.exports = AuthenticationManager =
 		crypto.randomBytes 48, (error, buffer) ->
 			return callback(error) if error?
 			callback null, buffer.toString("hex")
+	
+	emailVerified: (user_id, callback) ->
+		db.users.update({ 
+			_id: ObjectId(user_id.toString())
+		}, {
+			$set: confirmed: true
+		}, callback)
+
+

@@ -6,11 +6,16 @@ NewsLetterManager = require("../Newsletter/NewsletterManager")
 async = require("async")
 EmailHandler = require("../Email/EmailHandler")
 logger = require("logger-sharelatex")
+Settings = require('settings-sharelatex')
+VerifyEmailHandler = require('./VerifyEmailHandler')
 
 module.exports =
 	validateEmail : (email) ->
 		re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA -Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		return re.test(email)
+		return false unless re.test(email)
+		# Check if the admin has restricted email addresses
+		if Settings.restrictSignOnEmails?
+			return Settings.restrictSignOnEmails.test(email)
 
 	hasZeroLengths : (props) ->
 		hasZeroLength = false
@@ -50,18 +55,24 @@ module.exports =
 			self._createNewUserIfRequired user, userDetails, (err, user)->
 				if err?
 					return callback(err)
-				async.series [
-					(cb)-> User.update {_id: user._id}, {"$set":{holdingAccount:false}}, cb
-					(cb)-> AuthenticationManager.setUserPassword user._id, userDetails.password, cb
-					(cb)-> NewsLetterManager.subscribe user, cb
-					(cb)-> 
-						emailOpts =
-							first_name:user.first_name
-							to: user.email
-						EmailHandler.sendEmail "welcome", emailOpts, cb
-				], (err)->
-					logger.log user: user, "registered"
-					callback(err, user)
+				VerifyEmailHandler.getNewToken user._id, (err, token) ->
+					if err?
+						return callback(err)
+
+					async.series [
+						(cb)-> User.update {_id: user._id}, {"$set":{holdingAccount:false}}, cb
+						(cb)-> AuthenticationManager.setUserPassword user._id, userDetails.password, cb
+						(cb)-> NewsLetterManager.subscribe user, cb
+						(cb)->
+							if token?
+								emailOpts =
+									to: user.email
+									verifyEmailUrl : "#{Settings.siteUrl}/register/verifyEmail?code=#{token}" 
+								
+								EmailHandler.sendEmail "verifyEmail", emailOpts, cb
+					], (err)->
+						logger.log user: user, "registered"
+						callback(err, user)
 
 
 

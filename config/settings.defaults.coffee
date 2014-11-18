@@ -119,6 +119,13 @@ module.exports =
 	# --------
 	security:
 		sessionSecret: sessionSecret
+	
+	# Provide a regular expression that the emails of newly registered users must match
+        # This check comes after validating the email for correctness, so it doesn't need to
+	# be sophisticated.
+	restrictSignOnEmails: /.+@cs\.ucl\.ac\.uk$/i
+	# Send an verification email before allowing access to sharelatex
+	verifyEmail: true
 
 	httpAuthUsers: httpAuthUsers
 

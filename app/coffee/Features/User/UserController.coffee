@@ -10,6 +10,7 @@ AuthenticationController = require("../Authentication/AuthenticationController")
 AuthenticationManager = require("../Authentication/AuthenticationManager")
 ReferalAllocator = require("../Referal/ReferalAllocator")
 UserUpdater = require("./UserUpdater")
+Settings = require('settings-sharelatex')
 
 module.exports =
 
@@ -87,17 +88,23 @@ module.exports =
 			else if err?
 				next(err)
 			else
-				metrics.inc "user.register.success"
-				req.session.user = user
-				req.session.justRegistered = true
-				ReferalAllocator.allocate req.session.referal_id, user._id, req.session.referal_source, req.session.referal_medium
-				res.send
-					redir:redir
-					id:user._id.toString()
-					first_name: user.first_name
-					last_name: user.last_name
-					email: user.email
-					created: Date.now()
+				if Settings.verifyEmail? and Settings.verifyEmail
+					res.send
+						message:
+							type: 'success'
+							text: 'An email has been send to your address. Please click the verification link in that email.'
+				else
+					metrics.inc "user.register.success"
+					req.session.user = user
+					req.session.justRegistered = true
+					ReferalAllocator.allocate req.session.referal_id, user._id, req.session.referal_source, req.session.referal_medium
+					res.send
+						redir:redir
+						id:user._id.toString()
+						first_name: user.first_name
+						last_name: user.last_name
+						email: user.email
+						created: Date.now()
 
 
 	changePassword : (req, res, next = (error) ->)->

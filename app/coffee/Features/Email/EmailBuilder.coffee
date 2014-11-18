@@ -19,6 +19,33 @@ Ingolf <br>
 Maintainer of this installation
 '''
 
+templates.verifyEmail = 
+	subject: _.template "ShareLaTeX email verification"
+	layout: NotificationEmailLayout
+	type: "notification"
+	compiledTemplate: _.template '''
+<h1 class="h1">Email verification</h1>
+<p>
+An account with this email address was created.
+</p>
+<center>
+	<div style="width:200px;background-color:#a93629;border:1px solid #e24b3b;border-radius:3px;padding:15px; margin:12.5px;">
+		<div style="padding-right:10px;padding-left:10px">
+			<a href="<%= verifyEmailUrl %>" style="text-decoration:none" target="_blank">
+				<span style= "font-size:16px;font-family:Arial;font-weight:bold;color:#fff;white-space:nowrap;display:block; text-align:center">Verify email</span>
+			</a>
+		</div>
+	</div>
+</center>
+If you ignore this message, your account will not be activated.
+<p>
+If you did not create this account, please ignore this email.
+</p>
+<p>Thank you</p>
+<p> <a href="<%= siteUrl %>"> UCL CS ShareLaTeX </a></p>
+
+'''
+
 templates.canceledSubscription = 
 	subject:  _.template "ShareLaTeX thoughts"
 	layout: PersonalEmailLayout
@@ -43,7 +70,7 @@ templates.passwordResetRequested =
 <h1 class="h1">Password Reset</h1>
 <p>
 We got a request to reset your ShareLaTeX password.
-<p>
+</p>
 <center>
 	<div style="width:200px;background-color:#a93629;border:1px solid #e24b3b;border-radius:3px;padding:15px; margin:12.5px;">
 		<div style="padding-right:10px;padding-left:10px">
