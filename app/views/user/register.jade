@@ -33,7 +33,9 @@ block content
 									ng-model="email",
 									ng-init="email = #{JSON.stringify(new_email)}",
 									ng-model-options="{ updateOn: 'blur' }",
-									focus="true"
+									value=JSON.stringify(new_email),
+									readonly=(true ? new_email != "" : false),
+									focus=(false ? new_email : false)
 								)
 								span.small.text-primary(ng-show="registerForm.email.$invalid && registerForm.email.$dirty")
 									| #{translate("must_be_email_address")}
