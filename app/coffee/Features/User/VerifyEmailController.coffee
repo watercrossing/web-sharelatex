@@ -12,9 +12,10 @@ module.exports =
 		VerifyEmailHandler.verifyToken code.trim(), (err) ->
 			if err?
 				res.send message:
-					text: "Verification token is incorrect"
+					text: "Verification token is incorrect."
 					type: "error"
 			else
-				
-				res.redirect '/login'
+				res.render 'user/login',
+					title: 'login'
+					verification: 'successful'
 
