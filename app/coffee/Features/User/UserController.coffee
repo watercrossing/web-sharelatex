@@ -85,6 +85,10 @@ module.exports =
 		UserRegistrationHandler.registerNewUser req.body, (err, user)->
 			if err == "EmailAlreadyRegisterd"
 				return AuthenticationController.login req, res
+			else if err == "RestricedEmailAddress"
+				res.send message:
+					type : 'error'
+					text: 'Only authorised email addresses are allowed to sign up.'
 			else if err?
 				next(err)
 			else

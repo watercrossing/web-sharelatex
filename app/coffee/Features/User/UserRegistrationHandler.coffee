@@ -12,10 +12,14 @@ VerifyEmailHandler = require('./VerifyEmailHandler')
 module.exports =
 	validateEmail : (email) ->
 		re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA -Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		return false unless re.test(email)
-		# Check if the admin has restricted email addresses
+		return re.test(email)
+	
+	isRestrictedEmail : (email) ->
+		# Check if the admin has restricted email addresses, return true if ok
 		if Settings.restrictSignOnEmails?
 			return Settings.restrictSignOnEmails.test(email)
+		else
+			return true
 
 	hasZeroLengths : (props) ->
 		hasZeroLength = false
@@ -52,6 +56,10 @@ module.exports =
 				return callback err
 			if user?.holdingAccount == false
 				return callback("EmailAlreadyRegisterd")
+
+			if not user? and not self.isRestrictedEmail userDetails.email
+				return callback("RestricedEmailAddress")
+
 			self._createNewUserIfRequired user, userDetails, (err, user)->
 				if err?
 					return callback(err)
