@@ -10,18 +10,24 @@ User = require('../../models/User').User
 fs = require('fs')
 Path = require "path"
 _ = require "underscore"
+UserRegistrationHandler = require('../User/UserRegistrationHandler')
 
 module.exports =
 	createBlankProject : (owner_id, projectName, callback = (error, project) ->)->
-		metrics.inc("project-creation")
-		logger.log owner_id:owner_id, projectName:projectName, "creating blank project"
-		rootFolder = new Folder {'name':'rootFolder'}
-		project = new Project
-			 owner_ref  : new ObjectId(owner_id)
-			 name       : projectName
-			 useClsi2   : true
-		project.rootFolder[0] = rootFolder
 		User.findById owner_id, "ace.spellCheckLanguage", (err, user)->
+			return callback(err) if err?
+			if !UserRegistrationHandler.isRestrictedEmail user.email
+				logger.log owner_id:owner_id, projectName:projectName, "Unauthorized user tried to create a project"
+				return callback("UnauthorizedCreateNew")
+
+			metrics.inc("project-creation")
+			logger.log owner_id:owner_id, projectName:projectName, "creating blank project"
+			rootFolder = new Folder {'name':'rootFolder'}
+			project = new Project
+				owner_ref  : new ObjectId(owner_id)
+				name       : projectName
+				useClsi2   : true
+			project.rootFolder[0] = rootFolder
 			project.spellCheckLanguage = user.ace.spellCheckLanguage
 			project.save (err)->
 				return callback(err) if err?
