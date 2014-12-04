@@ -17,6 +17,7 @@ module.exports =
 	isRestrictedEmail : (email) ->
 		# Check if the admin has restricted email addresses, return true if ok
 		if Settings.restrictSignOnEmails?
+			logger.log email: email, status: Settings.restrictSignOnEmails.test(email), "is being tested if restricted"
 			return Settings.restrictSignOnEmails.test(email)
 		else
 			return true

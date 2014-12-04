@@ -14,10 +14,10 @@ UserRegistrationHandler = require('../User/UserRegistrationHandler')
 
 module.exports =
 	createBlankProject : (owner_id, projectName, callback = (error, project) ->)->
-		User.findById owner_id, "ace.spellCheckLanguage", (err, user)->
+		User.findById owner_id, "ace.spellCheckLanguage email", (err, user)->
 			return callback(err) if err?
 			if !UserRegistrationHandler.isRestrictedEmail user.email
-				logger.log owner_id:owner_id, projectName:projectName, "Unauthorized user tried to create a project"
+				logger.log email:user.email, owner_id:owner_id, projectName:projectName, "Unauthorized user tried to create a project"
 				return callback("UnauthorizedCreateNew")
 
 			metrics.inc("project-creation")
