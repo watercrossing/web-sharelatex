@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "express": "^3.3.4",
-    "mongoose": "3.8.8",
+    "mongoose": "^3.8.8",
     "mongojs": "0.10.1",
     "underscore": "1.6.0",
     "rimraf": "2.2.6",
