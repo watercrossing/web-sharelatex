@@ -3567,7 +3567,7 @@
     "settings-sharelatex": {
       "version": "1.0.0",
       "from": "settings-sharelatex@git+https://github.com/sharelatex/settings-sharelatex.git#cbc5e41c1dbe6789721a14b3fdae05bf22546559",
-      "resolved": "git+https://github.com/sharelatex/settings-sharelatex.git#cbc5e41c1dbe6789721a14b3fdae05bf22546559",
+      "resolved": "git+ssh://git@gitlab.cs.ucl.ac.uk:sharelatex/settings-sharelatex.git#cbc5e41c1dbe6789721a14b3fdae05bf22546559",
       "dependencies": {
         "coffee-script": {
           "version": "1.6.0",
