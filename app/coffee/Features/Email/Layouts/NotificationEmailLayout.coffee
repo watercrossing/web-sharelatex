@@ -1,7 +1,6 @@
 _ = require("underscore")
-settings = require "settings-sharelatex"
 
-module.exports = _.template """
+module.exports = _.template '''
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
@@ -312,8 +311,12 @@ module.exports = _.template """
 									<!-- // Begin Template Header \\ -->
 									<table border="0" cellpadding="0" cellspacing="0" width="600" id="templateHeader">
 										<tr>
-											<td class="headerContent" style="padding: 25px;border-bottom:#dadf90;background-color:#F6F6F6;text-align:left;font-size:18px">
-												#{settings.appName}
+											<td class="headerContent" style="padding: 25px;border-bottom:#dadf90;background-color:#F6F6F6;text-align:left;">
+
+												<!-- // Begin Module: Standard Header Image \\ -->
+												<img src="https://sharelatex.cs.ucl.ac.uk/img/logo.png" style="max-width:600px;" id="headerImage campaign-icon"  />
+												<!-- // End Module: Standard Header Image \\ -->
+
 											</td>
 										</tr>
 									</table>
@@ -352,4 +355,4 @@ module.exports = _.template """
 	</body>
 </html>
 
-"""
+'''

@@ -14,7 +14,9 @@ module.exports = AuthenticationManager =
 		User.findOne query, (error, user) =>
 			return callback(error) if error?
 			if user?
-				if user.hashedPassword?
+				if not user.confirmed
+					callback "Email not verified", null
+				else if user.hashedPassword?
 					bcrypt.compare password, user.hashedPassword, (error, match) ->
 						return callback(error) if error?
 						if match
@@ -27,6 +29,25 @@ module.exports = AuthenticationManager =
 					callback null, null
 			else
 				callback null, null
+
+	emailVerified: (user_id, callback) ->
+		# Two actions to do: set confirmed: true,
+		# Check if previously user.allowedToCreate, if not, check if
+		# current email matches, if so, set user.allowedToCreate: true
+		User.findOne _id: ObjectId(user_id.toString()), (error, user) =>
+			return callback(error) if error?
+			allowedToCreate = user.allowedToCreate and Settings.restrictSignOnEmails
+			if not allowedToCreate
+				#run regex:
+				allowedToCreate = Settings.restrictSignOnEmails.test(user.email)
+			db.users.update({
+				_id: ObjectId(user_id.toString())
+			}, {
+				$set: {
+					confirmed: true,
+					allowedToCreate = allowedToCreate
+				}
+			}, callback)
 
 	setUserPassword: (user_id, password, callback = (error) ->) ->
 		if Settings.passwordStrengthOptions?.length?.max? and Settings.passwordStrengthOptions?.length?.max < password.length

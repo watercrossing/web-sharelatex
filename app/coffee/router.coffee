@@ -27,6 +27,7 @@ ProjectDownloadsController = require "./Features/Downloads/ProjectDownloadsContr
 FileStoreController = require("./Features/FileStore/FileStoreController")
 HistoryController = require("./Features/History/HistoryController")
 PasswordResetRouter = require("./Features/PasswordReset/PasswordResetRouter")
+VerifyEmailRouter = require("./Features/User/VerifyEmailRouter")
 StaticPagesRouter = require("./Features/StaticPages/StaticPagesRouter")
 ChatController = require("./Features/Chat/ChatController")
 BlogController = require("./Features/Blog/BlogController")
@@ -75,6 +76,8 @@ module.exports = class Router
 
 		Modules.applyRouter(webRouter, apiRouter)
 
+		webRouter.get '/register/verifyEmail', VerifyEmailController.receiveVerification
+		AuthenticationController.addEndpointToLoginWhitelist '/register/verifyEmail'
 
 		if Settings.enableSubscriptions
 			webRouter.get  '/user/bonus', AuthenticationController.requireLogin(), ReferalController.bonus

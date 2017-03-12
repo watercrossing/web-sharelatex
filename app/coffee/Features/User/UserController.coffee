@@ -54,7 +54,7 @@ module.exports = UserController =
 		logger.log user_id: user_id, "updating account settings"
 		User.findById user_id, (err, user)->
 			if err? or !user?
-				logger.err err:err, user_id:user_id, "problem updaing user settings"
+				logger.err err:err, user_id:user_id, "problem updating user settings"
 				return res.sendStatus 500
 
 			if req.body.first_name?

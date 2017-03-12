@@ -166,6 +166,14 @@ module.exports = settings =
 
 	httpAuthUsers: httpAuthUsers
 
+	# Provide a regular expression that the emails of newly registered users must match, 
+	# or invited users must have in order for them to be able to create projects.
+	# This check comes after validating the email for correctness, so it doesn't need to
+	# be sophisticated.
+	restrictSignOnEmails: /.+@cs\.ucl\.ac\.uk$/i
+	# Send an verification email before allowing access to sharelatex
+	verifyEmail: true
+
 	# Default features
 	# ----------------
 	#
@@ -353,6 +361,8 @@ module.exports = settings =
 		#   header_extras: [{text: "Some Page", url: "http://example.com/some/page", class: "subdued"}]
 
 	customisation: {}
+	
+	
 
 #	templates: [{
 #		name : "cv_or_resume",

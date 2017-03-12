@@ -14,19 +14,23 @@ _ = require "underscore"
 module.exports =
 	createBlankProject : (owner_id, projectName, callback = (error, project) ->)->
 		metrics.inc("project-creation")
-		logger.log owner_id:owner_id, projectName:projectName, "creating blank project"
-		rootFolder = new Folder {'name':'rootFolder'}
-		project = new Project
-			 owner_ref  : new ObjectId(owner_id)
-			 name       : projectName
-		if Settings.currentImageName?
-			project.imageName = Settings.currentImageName
-		project.rootFolder[0] = rootFolder
-		User.findById owner_id, "ace.spellCheckLanguage", (err, user)->
-			project.spellCheckLanguage = user.ace.spellCheckLanguage
-			project.save (err)->
-				return callback(err) if err?
-				callback err, project
+		User.findById owner_id, "ace.spellCheckLanguage allowedToCreate", (err, user)->
+			if not user.allowedToCreate
+				logger.log owner_id:owner_id, projectName:projectName, "not allowed to create blank project"
+				return callback("UnauthorizedCreateNew")
+			else
+				logger.log owner_id:owner_id, projectName:projectName, "creating blank project"
+				rootFolder = new Folder {'name':'rootFolder'}
+				project = new Project
+					 owner_ref  : new ObjectId(owner_id)
+					 name       : projectName
+				if Settings.currentImageName?
+					project.imageName = Settings.currentImageName
+				project.rootFolder[0] = rootFolder
+				project.spellCheckLanguage = user.ace.spellCheckLanguage
+				project.save (err)->
+					return callback(err) if err?
+					callback err, project
 
 	createBasicProject :  (owner_id, projectName, callback = (error, project) ->)->
 		self = @
